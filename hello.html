@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .active {
+            color: green;
+            font-size: 36px;
+        }
+        
+        .danger {
+            color: coral;
+            font-size: 20px;
+        }
+    </style>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input v-model="message">
+        <div>{{ message }}</div>
+        <div>{{ message | capitalize }}</div>
+        <p>Computed reversed message: "{{ reversedMessage }}"</p>
+        <button v-on:click="reverseMessage">逆转消息</button>
+        <div> [<span>{{getReverseMessage()}}</span>]</div>
+
+        <span v-bind:title="now">鼠标悬停几秒钟查看此处动态绑定的提示信息！</span>
+        <p v-if="seen">现在你看到我了</p>
+        <input v-model="newTodoText" v-on:keyup.enter="addNewTodo" placeholder="Add a todo">
+
+        <div>
+            <ol>
+                <li v-for="todo in todos">
+                    <label><input type="radio" v-bind:value="todo" v-model="checkedTodo">{{todo.text}}</label>
+                </li>
+            </ol>
+            当前选中项为(单选)：{{checkedTodo}}</div>
+        <div>
+            <ol>
+                <li v-for="todo in todos">
+                    <label><input type="checkbox" v-bind:value="todo" v-model="checkedTodos">{{todo.text}}</label>
+                </li>
+            </ol>
+            当前选中项为(多选)：{{checkedTodos}}</div>
+        <div>
+            <select v-model="selectedTodo">
+    <option v-for="todo in todos">{{todo.text}}</option>
+  </select>
+            <span>当前选中项为(单选): {{ selectedTodo }}</span>
+        </div>
+        <div>
+            <select v-model="selectedTodos" multiple style="width: 50px">
+                <option v-for="todo in todos">{{todo.text}}</option>
+            </select>
+            <br>
+            <span>当前选中项为(多选): {{ selectedTodos }}</span>
+        </div>
+        <label><input type="checkbox" v-model="classObject0.isActive">是否激活{{ classObject0.isActive }}</label>
+
+        <div>
+            <ol>
+                <todo-item v-for="(item,index) in todos" v-bind:todo="item" v-on:remove="todos.splice(index, 1)" :key="'todos_'+index"></todo-item>
+            </ol>
+        </div>
+        <div v-html="html"></div>
+        <p>
+            Ask a yes/no question:
+            <input v-model="question">
+        </p>
+        <p>{{ answer }}</p>
+        <div v-bind:style="styleObject">Style样式</div>
+        <div v-bind:class="classObject">Class样式</div>
+
+        <ul>
+            <li v-for="(value, key, index) in userInfo">
+                {{ index }}. {{ key }} : {{ value }}
+
+            </li>
+        </ul>
+        <div>
+            <div v-for="n in 6">{{ n }}行</div>
+        </div>
+        <div>
+            <button v-on:click="counter += 1">增加 1</button>
+            <p>这个按钮被点击了 {{ counter }} 次。</p>
+        </div>
+
+        <div>
+
+            <span>Multiline message is:</span>
+            <p style="white-space: pre">{{ html }}</p>
+            <br>
+            <textarea v-model="html" placeholder="add multiple lines" style="width: 60%;resize: vertical;"></textarea>
+        </div>
+        <div>组件
+            <my-app></my-app>
+            <my-component></my-component>
+            <simple-counter></simple-counter>
+            <simple-counter></simple-counter>
+            <simple-counter></simple-counter>
+        </div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+
+
+
+
+    </div>
+    <script>
+        Vue.component('todo-item', {
+            props: ['todo'],
+            template: '<li>{{todo.text}}<button v-on:click="$emit(\'remove\')">X</button></li>'
+        })
+        Vue.component('my-app', {
+            template: '<div>这是一个全局注册的自定义组件!</div>'
+        })
+        var Child = {
+            template: '<div>这是一个局部注册的自定义组件!</div>'
+        }
+
+        Vue.component('simple-counter', {
+            template: '<button v-on:click="counter += 1">{{ counter }}</button>',
+            // 技术上 data 的确是一个函数了，因此 Vue 不会警告，
+            // 但是我们返回给每个组件的实例的却引用了同一个data对象
+            data: function() {
+                return {
+                    counter: 0
+                }
+            }
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue 2017!',
+                title: '页面加载于 ' + new Date(),
+                seen: true,
+                firstName: 'zc',
+                lastName: 'ge',
+                newTodoText: '',
+                todos: [{
+                    text: '1001'
+                }, {
+                    text: '1002'
+                }, {
+                    text: '1003'
+                }],
+                selectedTodo: '1001',
+                selectedTodos: [],
+                checkedTodo: null,
+                checkedTodos: [],
+                html: '<div style="font-size:36px;color:red;">html<br/>ok</div>',
+                question: '',
+                answer: 'I cannot give you an answer until you ask a question!',
+                styleObject: {
+                    color: 'red',
+                    fontSize: '18px'
+                },
+                classObject0: {
+                    isActive: true,
+                    isDanger: false
+                },
+                classObject: {
+                    active: true,
+                    danger: false
+                },
+                userInfo: {
+                    FirstName: 'John',
+                    LastName: 'Doe',
+                    Age: 30
+                },
+                counter: 0
+            },
+            computed: {
+                reversedMessage: function() {
+                    // `this` points to the vm instance
+                    return this.message.split('').reverse().join('')
+                },
+                now: function() {
+                    return Date.now()
+                },
+                fullName: {
+                    // getter
+                    get: function() {
+                        return this.firstName + ' ' + this.lastName
+                    },
+                    // setter
+                    set: function(newValue) {
+                        var names = newValue.split(' ')
+                        this.firstName = names[0]
+                        this.lastName = names[names.length - 1]
+                    }
+                }
+            },
+            watch: {
+                // 如果 question 发生改变，这个函数就会运行
+                question: function(newQuestion) {
+                    this.answer = 'Waiting for you to stop typing...'
+                }
+            },
+            methods: {
+                reverseMessage: function() {
+                    this.message = this.message.split('').reverse().join('');
+                },
+                getReverseMessage: function() {
+                    return this.message.split('').reverse().join('');
+                },
+                addNewTodo: function() {
+                    this.todos.push({
+                        text: this.newTodoText
+                    })
+                    this.newTodoText = ''
+                }
+            },
+            filters: {
+                capitalize: function(value) {
+                    if (!value) return ''
+                    value = value.toString()
+                    return value.charAt(0).toUpperCase() + value.slice(1)
+                }
+            },
+            components: {
+                'my-component': Child
+            }
+        });
+    </script>
+
+</body>
+
+</html>
